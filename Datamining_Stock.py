@@ -10,8 +10,10 @@ def crawl_stock(date):
     r=requests.get('https://www.twse.com.tw/exchangeReport/MI_INDEX?response=csv&date=' + date + '&type=ALL')
     #! refine to use native csv lib
     list = []
+    #! Please remove following for-loop and use native csv
+    #  reader instead of pandas.
     for i in r.text.split('\n'):
-	    if len(i.split('",')) == 17 and i[0] != '=':       
+	    if len(i.split('",')) == 17 and i[0] != '=':
 		    i = i.strip(",\r\n")
 		    list.append(i)
     df = pd.read_csv(StringIO("\n".join(list)))
@@ -40,11 +42,15 @@ def crawl_stock(date):
         json.dump(result, f, ensure_ascii = False, indent = 4)
 
 def get14days_feature(day, StockID, feature):
+    #! remove not necessary comment.
     #date, stock, feature):
     path_init = "/home/db/stock_resource_center/resource/twse/json"
     path_list = os.listdir(path_init)
+    #! No Chinese please.
     path_list = sorted(os.listdir(path_init), key = lambda x:x[:-5])  #對讀取的路徑進行排序
     for i in range(15):
+        #! Please refer to Python official document about range
+        #  function and remove following if-else
         if i==0 :
             path = path_init + '/' + day + '.json'
             index = path_list.index(day + '.json')
