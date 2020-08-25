@@ -11,11 +11,21 @@ def crawl_stock(date):
     #! refine to use native csv lib
     list = []
     #! Please remove following for-loop and use native csv
-    #  reader instead of pandas.
+    #  reader instead of pandas. In order to skip front
+    #  useless information, there are two ways to do it.
+    #   a. Using while loop until you reach certain string
+    #      such as "證券代號".
+    #   b. Use regex to extract whole substring after "證券代號"
+    #  Either solution would be better than current method,
+    #  regarding readability and flexibility. As for mapping
+    #  unicode in regex, please search on Google. There are
+    #  plenty of resource and try on regex101.com to make sure
+    #  the regex pattern is certainly doing what you want.
     for i in r.text.split('\n'):
 	    if len(i.split('",')) == 17 and i[0] != '=':
 		    i = i.strip(",\r\n")
 		    list.append(i)
+
     df = pd.read_csv(StringIO("\n".join(list)))
     data = df.values.tolist()
     result = {}
